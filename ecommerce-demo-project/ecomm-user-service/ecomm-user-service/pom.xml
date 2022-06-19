@@ -9,10 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ecomm</groupId>
-	<artifactId>ecomm-user-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>user-service</artifactId>
+	<version>0.0.1</version>
 	<name>ecomm-user-service</name>
 	<description>Demo project for Spring Boot</description>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
@@ -104,6 +105,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+					<name>ashish1510/ms-${project.artifactId}:${project.version}</name>
+					</image>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
