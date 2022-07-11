@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   my-userservice:
-    image: ashish1510/user-service:0.0.2
+    image: ashish1510/user-service:0.0.1
     container_name: userservice-container
     #build:
       #context: .
@@ -12,6 +12,7 @@ services:
       - "8080:8080"
     restart: on-failure
     depends_on: # Start the depends_on first
+      - my-mysql 
       - my-redis
     environment:
       #RDS_HOSTNAME: my-mysql
@@ -19,17 +20,33 @@ services:
       #RDS_DB_NAME: db_userservice
       #RDS_USERNAME: root
       #RDS_PASSWORD: root      
-      SPRING_DATASOURCE_URL: jdbc:mysql://my-mysql/userDB
+      SPRING_DATASOURCE_URL: jdbc:mysql://my-mysql:3306/userDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ashish
       SPRING_REDIS_HOST: my-redis
       SPRING_REDIS_PORT: 6379 
-    
+    networks:
+      - userservice-application-network
 
+  my-mysql:
+    image: mysql
+    container_name: my-mysql
+    ports:
+      - "3200:3306"
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: ashish
+    volumes:
+      - mysql-database-data-volume:/var/lib/mysql
+    networks:
+      - userservice-application-network
+      
   my-redis:
     image: "redis:5.0-alpine"
     container_name: redis-container
     #network_mode: bridge
+    networks:
+      - userservice-application-network
     expose:
       - '6379'
     volumes:
@@ -41,4 +58,8 @@ services:
   
 # Volumes
 volumes:
+  mysql-database-data-volume:
   redis-data:
+
+networks:
+  userservice-application-network:

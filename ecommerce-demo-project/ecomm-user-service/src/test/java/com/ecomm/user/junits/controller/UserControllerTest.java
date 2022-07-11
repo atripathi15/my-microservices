@@ -112,7 +112,7 @@ public class UserControllerTest {
 		final String link = "/api/v1/user/"+userId;
 		
 		this.mockMvc.perform(MockMvcRequestBuilders
-				.post(link)
+				.put(link)
 				.contentType(MediaType.APPLICATION_JSON)
 		        .content(asJsonString(user)))
 				.andExpect(status().isOk());

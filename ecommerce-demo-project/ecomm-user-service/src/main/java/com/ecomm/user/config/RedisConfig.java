@@ -12,17 +12,17 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 @Configuration
 public class RedisConfig {
 
-	@Bean
-	public RedisCacheConfiguration cacheConfiguration() {
-		return RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(60)).disableCachingNullValues()
-				.serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
-	}
+    @Bean
+    RedisCacheConfiguration cacheConfiguration() {
+        return RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(60)).disableCachingNullValues()
+                .serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+    }
 
-	@Bean
-	public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
-		return (builder) -> builder
-				.withCacheConfiguration("userCache",
-						RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(1)));
-	}
+    @Bean
+    RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
+        return (builder) -> builder
+                .withCacheConfiguration("userCache",
+                        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(1)));
+    }
 
 }

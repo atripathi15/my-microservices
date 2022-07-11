@@ -33,7 +33,7 @@ public class UserDetail implements Serializable{
 	private String emailId;
 	@Column(name="mobile_number", nullable=false)
 	private String mobileNumber;	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private RoleMaster roleMaster;
 
