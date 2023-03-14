@@ -12,10 +12,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ecomm.user.entity.CityMaster;
+import com.ecomm.user.entity.CountryMaster;
 import com.ecomm.user.entity.RoleMaster;
+import com.ecomm.user.entity.StateMaster;
+import com.ecomm.user.entity.UserAddress;
 import com.ecomm.user.entity.UserDetail;
 import com.ecomm.user.model.UserVO;
+import com.ecomm.user.repository.CityMasterRepository;
+import com.ecomm.user.repository.CountryMasterRepository;
 import com.ecomm.user.repository.RoleMasterRepository;
+import com.ecomm.user.repository.StateMasterRepository;
 import com.ecomm.user.repository.UserRepository;
 import com.ecomm.user.service.UserService;
 
@@ -33,6 +40,15 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private CityMasterRepository cityMasterRepository;
+	
+	@Autowired
+	private CountryMasterRepository countryMasterRepository;
+	
+	@Autowired
+	private StateMasterRepository stateMasterRepository;
 
 	@Override
 	@Transactional
@@ -41,10 +57,39 @@ public class UserServiceImpl implements UserService {
 		UserDetail userDetail = modelMapper.map(userVO, UserDetail.class);
 		RoleMaster rm = userDetail.getRoleMaster();
 		RoleMaster roleMaster = roleMasterRepository.findById(rm.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User role with id : " + rm.getId() +" does not exists"));
+		if (userDetail.getUserAddress() != null && userDetail.getUserAddress().size()>0) {
+			for (UserAddress address : userDetail.getUserAddress()) {
+				if (address.getCity() != null) {
+					int cityId = address.getCity().getId();
+					CityMaster cm = cityMasterRepository.findById(cityId)
+							.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+									"City with id : " + cityId + " does not exists"));
+					address.setCity(cm);
+				}
+				if (address.getState() != null) {
+					int stateId = address.getState().getId();
+					StateMaster sm = stateMasterRepository.findById(address.getState().getId())
+							.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+									"State with id : " + stateId + " does not exists"));
+					address.setState(sm);
+				}
+				if (address.getCountry() != null) {
+					int countryId = address.getCountry().getId();
+					CountryMaster country = countryMasterRepository
+							.findById(countryId)
+							.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+									"Country with id : " + countryId + " does not exists"));
+					address.setCountry(country);
+				}
+				address.setUser(userDetail);
+			}
+		}
+		
 		if (roleMaster != null) {
 			userDetail.setRoleMaster(roleMaster);
-			userDetail = userRepository.save(userDetail);
+			
 		}
+		userDetail = userRepository.save(userDetail);
 		log.info("Add user method finisshed successfully");
 		return userDetail!=null?userDetail.getId():-1;
 	}

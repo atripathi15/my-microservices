@@ -1,6 +1,7 @@
 package com.ecomm.user.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -26,4 +27,5 @@ public class UserVO implements Serializable {
 	@Valid
 	@NotNull(message = "userRole is mandatory")
 	private RoleMasterVO userRole;
+	private Set<UserAddressVO> userAddress;
 }
