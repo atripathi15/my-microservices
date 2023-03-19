@@ -1,8 +1,10 @@
 package com.ashish.product.config;
 
 import org.springdoc.core.GroupedOpenApi;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -30,6 +32,12 @@ public class ServiceConfig {
                 .externalDocs(new ExternalDocumentation()
                         .description("SpringShop Wiki Documentation")
                         .url("https://springshop.wiki.github.org/docs"));
+    }
+    
+    @Bean
+    @LoadBalanced
+    RestTemplate getRestTemplate() {
+    	return new RestTemplate();
     }
 
 
