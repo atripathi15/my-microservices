@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.ws.rs.QueryParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,12 @@ public class UserAddressController {
 	@GetMapping("/user/{userId}/address")
 	public ResponseEntity<List<UserAddressVO>> getAllUserAddresses(@PathVariable int userId) {
 		List<UserAddressVO> userList = addressService.getAllUserAddresses(userId);
+		return new ResponseEntity<List<UserAddressVO>>(userList, HttpStatus.OK);
+	}
+	
+	@GetMapping("/user/address")
+	public ResponseEntity<List<UserAddressVO>> getAllUserAddressesByRoleName(@QueryParam(value = "role") String role) {
+		List<UserAddressVO> userList = addressService.getAllUserAddressesByRoleName(role);
 		return new ResponseEntity<List<UserAddressVO>>(userList, HttpStatus.OK);
 	}
 

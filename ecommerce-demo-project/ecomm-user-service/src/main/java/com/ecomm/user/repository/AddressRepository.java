@@ -11,5 +11,7 @@ import com.ecomm.user.entity.UserAddress;
 public interface AddressRepository extends JpaRepository<UserAddress, Integer> {
 
 	List<UserAddress> findByUserId(int userId);
+	
+	List<UserAddress> findByUserRoleMasterName(String name);
 
 }

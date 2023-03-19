@@ -6,6 +6,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -106,6 +107,14 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public void deleteAddress(int addressId) {
 		addressRepository.deleteById(addressId);
+	}
+
+	@Override
+	public List<UserAddressVO> getAllUserAddressesByRoleName(String role) {
+        List<UserAddressVO> userAddressVOList = new ArrayList<>();
+		List<UserAddress> userAddresses = addressRepository.findByUserRoleMasterName(role);
+		userAddresses.forEach(u-> userAddressVOList.add(modelMapper.map(u, UserAddressVO.class)));
+		return userAddressVOList;
 	}
 
 }

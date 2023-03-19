@@ -16,6 +16,8 @@ public interface AddressService {
 
 	void deleteAddress(int addressId);
 
+	List<UserAddressVO> getAllUserAddressesByRoleName(String role);
+
 
 
 }
